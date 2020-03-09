@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+   gather_facts: yes
+   become_user: root
+   tasks:
+     - name: Installing packages using loops
+        apt: pkg={{ item }} state=present update_cache=yes
+        with_items:
+          - sysstat
+          - htop
+          - git
