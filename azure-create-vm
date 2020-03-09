@@ -1,1 +1,25 @@
-azure-create-vm
+#Create Azure VM with CustomScript ( AWS UserData like )...
+
+### TESTED AND WORKED 
+
+https://github.com/Azure-Samples/azure-cli-samples/blob/56ff569bf31cef1a96e48bedf5ca6698fa1258f6/virtual-machine/create-vm-nginx/create-vm-nginx.sh 
+# Create a new virtual machine, this creates SSH keys if not present.
+az vm create --resource-group 1-0c09d3-playground-sandbox \
+     --name sglinuxtestvm --image UbuntuLTS --generate-ssh-keys
+
+# Use CustomScript extension to run ansible playbook.
+az vm extension set \
+  --publisher Microsoft.Azure.Extensions \
+  --name CustomScript \
+  --vm-name sglinuxtestvm \
+  --resource-group 1-0c09d3-playground-sandbox \
+  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/roadtoclouds/azure/master/azure-bash-ansible.sh"],"commandToExecute": "./azure-bash-ansible.sh"}'
+
+# Force update the customscript.
+az vm extension set \
+  --force-update \
+  --publisher Microsoft.Azure.Extensions \
+  --name CustomScript \
+  --vm-name sglinuxtestvm \
+  --resource-group 1-0c09d3-playground-sandbox \
+  --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/roadtoclouds/azure/master/azure-bash-ansible.sh"],"commandToExecute": "./azure-bash-ansible.sh"}'
